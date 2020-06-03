@@ -2,13 +2,16 @@ import sys
 # reload(sys)
 # sys.setdefaultencoding('utf8')
 
+from os import path
 import argparse
 import os
 import requests
 import json
+from requests import ReadTimeout
 
 
 def strToJson(jstr):
+    print(jstr)
     jbean = json.loads(jstr)
     result = ''
 
@@ -33,9 +36,24 @@ def strToJson(jstr):
 async def getTranslation(text):
     url = "https://lab.magiconch.com/api/nbnhhsh/guess"
     data = {"text": text}
-    res = requests.post(url=url, data=data)
-    print(res.text)
-    return strToJson(res.text)
+    print(text)
+    print(type(text))
+    try:
+        fp = open(path.join(path.dirname(__file__), 'database.json'), 'r', encoding='utf8')
+        database = json.load(fp)
+        res = requests.post(url=url, data=data)
+        str_user = database.get(text, 'None')
+        if res.status_code != 200:
+            if str_user != 'None':
+                return strToJson(res.text[0:len(res.text) - 3] + ',\"' + str_user + '\"]}]')
+            return strToJson(res.text)
+    except (ConnectionError, ReadTimeout):
+        print('Crawling Failed', url)
+        # return strToJson('[{[\"网络连接失败!\",\"' + text + '\",\"' + str_user + '\"]}]')
+        return
+    except IOError:
+        # return strToJson('IOError')
+        return
 
 
 if __name__ == '__main__':
