@@ -4,6 +4,17 @@ from .CRUD import add_to_json
 from .CRUD import del_to_json
 
 
+__plugin_name__ = '能不能好好说话'
+__plugin_usage__ = r"""
+缩写翻译
+
+命令：缩写 [英文缩写]
+本功能需要@机器人使用
+自建词条命令：学英语 [英文缩写]:[中文名称]
+删除指定词条命令：删英语 [英文缩写]
+"""
+
+
 # 注册nbnhhsh函数为命令处理器
 @on_command('nbnhhsh', aliases=('缩写', '查缩写',))
 async def nbnhhsh(session: CommandSession):

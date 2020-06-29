@@ -11,7 +11,7 @@ def add_to_json(abbr: str) -> str:
         cmd = '输入参数有误，请用冒号分隔'
         return cmd
     if data.get(operate[0], 0) != 0:
-        cmd = operate[0] + '已经存在，原值为' + operate[1] + '\n'
+        cmd = operate[0] + '已经存在，原值为' + data.get(operate[0], 0) + '\n'
         print('too more key')
     data[operate[0]] = operate[1]
     cmd = cmd + "已增加新字典 " + operate[0] + ':' + operate[1]
@@ -26,11 +26,10 @@ def del_to_json(abbr: str) -> str:
         data = json.load(fp)
     operate = abbr.split(':')
     # flag = 0
-    for index in range(0,len(operate)):
+    for index in range(0, len(operate)):
         if data.get(operate[index], 0) != 0:
             del data[operate[index]]
             cmd = '已删除' + operate[index]
-            # print('too more key')
             break
         else:
             cmd = '需删除条目不存在'

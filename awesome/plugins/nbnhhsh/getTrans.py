@@ -37,14 +37,18 @@ async def getTranslation(text):
     url = "https://lab.magiconch.com/api/nbnhhsh/guess"
     data = {"text": text}
     print(text)
-    print(type(text))
+    # print(type(text))
     try:
-        fp = open(path.join(path.dirname(__file__), 'database.json'), 'r', encoding='utf8')
-        database = json.load(fp)
+        with open(path.join(path.dirname(__file__), 'database.json'), 'r', encoding='utf8') as fp:
+            database = json.load(fp)
         res = requests.post(url=url, data=data)
+        print(res.text)
+        # print(type(res.text))
         str_user = database.get(text, 'None')
-        if res.status_code != 200:
+        if res.status_code == 200:
             if str_user != 'None':
+                if res.text[len(res.text)-4] == '[':
+                    return strToJson(res.text[0:len(res.text) - 3] + '\"' + str_user + '\"]}]')
                 return strToJson(res.text[0:len(res.text) - 3] + ',\"' + str_user + '\"]}]')
             return strToJson(res.text)
     except (ConnectionError, ReadTimeout):
@@ -52,6 +56,7 @@ async def getTranslation(text):
         # return strToJson('[{[\"网络连接失败!\",\"' + text + '\",\"' + str_user + '\"]}]')
         return
     except IOError:
+        print('IO Failed')
         # return strToJson('IOError')
         return
 

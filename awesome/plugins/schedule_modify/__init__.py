@@ -40,3 +40,8 @@ async def _(session: CommandSession):
 
     # 如果当前正在向用户询问更多信息，且用户输入有效，则放入会话状态
     session.state[session.current_key] = stripped_arg
+
+
+@on_command('love', aliases=('48974654'), permission=SUPERUSER, only_to_me=True)
+async def modify(session: CommandSession):
+    await session.send('老公mua')
